@@ -1,0 +1,61 @@
+name: Build DynamicIsland Tweak
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build .deb package
+    runs-on: macos-14
+    
+    env:
+      THEOS: ${{ github.workspace }}/theos
+    
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Cache Theos
+        id: cache-theos
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/theos
+          key: theos-${{ runner.os }}-v2
+
+      - name: Install Theos
+        if: steps.cache-theos.outputs.cache-hit != 'true'
+        run: |
+          git clone --recursive https://github.com/theos/theos.git $THEOS
+
+      - name: Setup iOS SDK
+        run: |
+          if [ ! -d "$THEOS/sdks/iPhoneOS14.5.sdk" ] && [ ! -d "$THEOS/sdks/iPhoneOS16.5.sdk" ]; then
+            echo "Fetching patched Theos SDKs..."
+            git clone --depth=1 https://github.com/theos/sdks.git $THEOS/sdks
+          fi
+          XCODE_SDK=$(xcrun --sdk iphoneos --show-sdk-path)
+          XCODE_VER=$(xcrun --sdk iphoneos --show-sdk-version)
+          mkdir -p $THEOS/sdks
+          ln -sfn "$XCODE_SDK" "$THEOS/sdks/iPhoneOS${XCODE_VER}.sdk"
+          ls -la $THEOS/sdks
+
+      - name: Build package
+        run: |
+          make clean
+          make package FINALPACKAGE=1 PACKAGE_FORMAT=deb 2>&1
+
+      - name: List built packages
+        run: |
+          ls -la packages/ || ls -la .theos/packages/ || true
+
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DynamicIsland-deb
+          path: |
+            packages/*.deb
+            .theos/packages/*.deb
+          if-no-files-found: error
+          retention-days: 30
