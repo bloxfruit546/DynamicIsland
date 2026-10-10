@@ -22,7 +22,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/theos
-          key: theos-${{ runner.os }}-v2
+          key: theos-${{ runner.os }}-v3
 
       - name: Install Theos
         if: steps.cache-theos.outputs.cache-hit != 'true'
@@ -33,6 +33,7 @@ jobs:
         run: |
           if [ ! -d "$THEOS/sdks/iPhoneOS14.5.sdk" ] && [ ! -d "$THEOS/sdks/iPhoneOS16.5.sdk" ]; then
             echo "Fetching patched Theos SDKs..."
+            rm -rf $THEOS/sdks
             git clone --depth=1 https://github.com/theos/sdks.git $THEOS/sdks
           fi
           XCODE_SDK=$(xcrun --sdk iphoneos --show-sdk-path)
@@ -43,12 +44,15 @@ jobs:
 
       - name: Build package
         run: |
+          if [ -d "DynamicIsland" ]; then
+            cd DynamicIsland
+          fi
           make clean
           make package FINALPACKAGE=1 PACKAGE_FORMAT=deb 2>&1
 
       - name: List built packages
         run: |
-          ls -la packages/ || ls -la .theos/packages/ || true
+          ls -la packages/ || ls -la DynamicIsland/packages/ || ls -la .theos/packages/ || true
 
       - name: Upload .deb artifact
         uses: actions/upload-artifact@v4
@@ -57,5 +61,7 @@ jobs:
           path: |
             packages/*.deb
             .theos/packages/*.deb
+            DynamicIsland/packages/*.deb
+            DynamicIsland/.theos/packages/*.deb
           if-no-files-found: error
           retention-days: 30
