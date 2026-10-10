@@ -1,0 +1,10 @@
+Package: com.dev.dynamicisland
+Name: Dynamic Island
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Dynamic Island simulation with notifications, music, calls
+Author: DynamicIsland Dev
+Maintainer: DynamicIsland Dev
+Depends: mobilesubstrate (>= 0.9.7000), preferenceloader
+Section: Tweaks
+Priority: optional

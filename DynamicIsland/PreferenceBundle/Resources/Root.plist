@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>title</key>
+    <string>Dynamic Island</string>
+    <key>items</key>
+    <array>
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Cài Đặt Chung</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>com.dev.dynamicisland</string>
+            <key>key</key>
+            <string>isEnabled</string>
+            <key>label</key>
+            <string>Bật Dynamic Island</string>
+            <key>PostNotification</key>
+            <string>com.dev.dynamicisland/ReloadPrefs</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Tính Năng Hiển Thị</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>com.dev.dynamicisland</string>
+            <key>key</key>
+            <string>showNotifications</string>
+            <key>label</key>
+            <string>Thông Báo (Banner)</string>
+            <key>PostNotification</key>
+            <string>com.dev.dynamicisland/ReloadPrefs</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>com.dev.dynamicisland</string>
+            <key>key</key>
+            <string>showMusic</string>
+            <key>label</key>
+            <string>Âm Nhạc (Now Playing)</string>
+            <key>PostNotification</key>
+            <string>com.dev.dynamicisland/ReloadPrefs</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>com.dev.dynamicisland</string>
+            <key>key</key>
+            <string>showCalls</string>
+            <key>label</key>
+            <string>Cuộc Gọi Đến / Đang Gọi</string>
+            <key>PostNotification</key>
+            <string>com.dev.dynamicisland/ReloadPrefs</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>label</key>
+            <string>Phản Hồi &amp; Rung</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSSwitchCell</string>
+            <key>default</key>
+            <true/>
+            <key>defaults</key>
+            <string>com.dev.dynamicisland</string>
+            <key>key</key>
+            <string>hapticFeedback</string>
+            <key>label</key>
+            <string>Haptic Feedback (Rung khi chạm)</string>
+            <key>PostNotification</key>
+            <string>com.dev.dynamicisland/ReloadPrefs</string>
+        </dict>
+        <dict>
+            <key>cell</key>
+            <string>PSGroupCell</string>
+            <key>footerText</key>
+            <string>Dynamic Island cho iPhone 5s (iOS 12.5.8 Chimera) - Made with ❤️</string>
+        </dict>
+        <dict>
+            <key>action</key>
+            <string>respring</string>
+            <key>cell</key>
+            <string>PSButtonCell</string>
+            <key>label</key>
+            <string>Respring SpringBoard</string>
+        </dict>
+    </array>
+</dict>
+</plist>

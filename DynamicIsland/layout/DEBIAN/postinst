@@ -1,0 +1,10 @@
+#!/bin/bash
+if command -v uicache >/dev/null 2>&1; then
+    uicache
+fi
+if command -v sbreload >/dev/null 2>&1; then
+    sbreload
+elif command -v killall >/dev/null 2>&1; then
+    killall -9 SpringBoard
+fi
+exit 0
