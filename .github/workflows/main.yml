@@ -1,46 +1,17 @@
-name: Build DynamicIsland Tweak
-
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
-
+name: Build
+on: [push, workflow_dispatch]
 jobs:
   build:
-    name: Build .deb package
     runs-on: macos-14
-    
     env:
       THEOS: ${{ github.workspace }}/theos
-    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Build Tools
-        run: brew install dpkg ldid
-
-      - name: Extract source
-        run: |
-          unzip -o DynamicIsland_clean.zip -d build_src
-          chmod -R 0755 build_src/layout/DEBIAN || true
-
-      - name: Setup Theos and SDKs
-        run: |
-          git clone --recursive https://github.com/theos/theos.git $THEOS
-          rm -rf $THEOS/sdks
-          git clone --depth=1 https://github.com/theos/sdks.git $THEOS/sdks
-
-      - name: Build package
-        run: |
-          cd build_src
-          make clean
-          make package FINALPACKAGE=1
-
-      - name: Upload .deb package
-        uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v4
+      - run: brew install dpkg ldid
+      - run: unzip -o DynamicIsland_clean.zip -d build_src && chmod -R 755 build_src/layout/DEBIAN || true
+      - run: git clone --recursive https://github.com/theos/theos.git $THEOS && rm -rf $THEOS/sdks && git clone --depth=1 https://github.com/theos/sdks.git $THEOS/sdks
+      - run: cd build_src && make package FINALPACKAGE=1
+      - uses: actions/upload-artifact@v4
         with:
           name: DynamicIsland-deb
           path: build_src/packages/*.deb
-          if-no-files-found: error
-          retention-days: 30
