@@ -10,7 +10,16 @@ jobs:
       - run: brew install dpkg ldid
       - run: unzip -o DynamicIsland_clean.zip -d build_src && chmod -R 755 build_src/layout/DEBIAN || true
       - run: git clone --recursive https://github.com/theos/theos.git $THEOS && rm -rf $THEOS/sdks && git clone --depth=1 https://github.com/theos/sdks.git $THEOS/sdks
-      - run: cd build_src && make package FINALPACKAGE=1
+      - run: |
+          cd build_src
+          make package FINALPACKAGE=1 > ../build.log 2>&1 || {
+            echo "### ❌ Build Error Log" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            tail -n 100 ../build.log >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat ../build.log
+            exit 1
+          }
       - uses: actions/upload-artifact@v4
         with:
           name: DynamicIsland-deb
