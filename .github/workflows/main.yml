@@ -752,6 +752,11 @@ jobs:
                       os.chmod(os.path.join('build_src', member.filename), 0o755)
           print('Extracted', len(os.listdir('build_src')), 'items successfully')
 
+      - name: Install Build Tools (ldid & dpkg)
+        run: |
+          brew install ldid dpkg
+          echo "/opt/homebrew/bin" >> $GITHUB_PATH
+
       - name: Install Theos & Patched SDKs
         run: |
           rm -rf $THEOS
