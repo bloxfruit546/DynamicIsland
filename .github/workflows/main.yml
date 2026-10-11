@@ -14,24 +14,18 @@ jobs:
       THEOS: ${{ github.workspace }}/theos
     
     steps:
-      - name: Checkout source
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract source code
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/build_src
-          if [ -f "$GITHUB_WORKSPACE/DynamicIsland_clean.zip" ]; then
-            unzip -o "$GITHUB_WORKSPACE/DynamicIsland_clean.zip" -d $GITHUB_WORKSPACE/build_src
-          elif [ -f "$GITHUB_WORKSPACE/DynamicIsland.zip" ]; then
-            unzip -o "$GITHUB_WORKSPACE/DynamicIsland.zip" -d $GITHUB_WORKSPACE/build_src
-          else
-            echo "ERROR: Please upload DynamicIsland_clean.zip to your repository root!"
-            exit 1
-          fi
-          chmod -R 0755 $GITHUB_WORKSPACE/build_src/layout/DEBIAN || true
-          ls -la $GITHUB_WORKSPACE/build_src
+      - name: Install Build Tools
+        run: brew install dpkg ldid
 
-      - name: Install Theos & SDKs
+      - name: Extract source
+        run: |
+          unzip -o DynamicIsland_clean.zip -d build_src
+          chmod -R 0755 build_src/layout/DEBIAN || true
+
+      - name: Setup Theos and SDKs
         run: |
           git clone --recursive https://github.com/theos/theos.git $THEOS
           rm -rf $THEOS/sdks
@@ -39,11 +33,11 @@ jobs:
 
       - name: Build package
         run: |
-          cd $GITHUB_WORKSPACE/build_src
+          cd build_src
           make clean
           make package FINALPACKAGE=1
 
-      - name: Upload .deb artifact
+      - name: Upload .deb package
         uses: actions/upload-artifact@v4
         with:
           name: DynamicIsland-deb
